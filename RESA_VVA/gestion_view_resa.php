@@ -381,8 +381,7 @@
                                 $timestamp = strtotime($DATEFINSEM);
                                 $finSemaine = date("d-m-Y", $timestamp);
                                 $ETAT = utf8_encode(GetNomEtatResa($NORESA)['NOMETATRESA']);
-
-                                if (strtotime($DATEFINSEM) >= strtotime("now")) {
+                                if (strtotime($DATEFINSEM) >= strtotime("-1 day")) {
                                     echo "<td><button type='button' class='btn btn-warning btn-md' data-bs-toggle='modal' data-bs-target='#update$NORESA' ><i class='fas fa-edit'></i></button></td>";
                                 } else {
                                     echo "<td style='color:#EDB801'>Date dépassé</td>";
