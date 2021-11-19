@@ -458,7 +458,7 @@
                 } else {
                     $page = 1;
                 }
-                echo "<script type='text/javascript'>document.location.href='./view_heb_gestion.php?p=$page'</script>";
+                echo "<script type='text/javascript'>document.location.href='./gestion_view_heb.php?p=$page'</script>";
             }
         }
     }

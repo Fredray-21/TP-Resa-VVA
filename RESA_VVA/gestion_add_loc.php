@@ -105,7 +105,7 @@
     </section>
     <!-- End Breadcrumbs -->
 
-    <section class="inner-page">
+    <section class="inner-page" data-aos="fade-up">
       <div class="container ">
         <form action="" method="post" enctype="multipart/form-data">
           <div class="row justify-content-center">
@@ -159,7 +159,7 @@
             </div>
           </div>
 
-          <div class="row justify-content-center">
+          <div class="row justify-content-center" >
             <div class="p-3 form-group col-md-4 bg-white">
               <label for="secteurheb" class="form-label">Secteur de l'hébergement</label>
               <select class="form-select" aria-label="select" id="secteurheb" name='secteurheb' required>
@@ -315,7 +315,7 @@
 
           $nbheb = intval(getNbAllheb()['NbHeb']);
           $nbheb = ceil($nbheb / 5);
-          echo "<script type='text/javascript'>document.location.href='./view_heb_gestion.php?p=$nbheb'</script>";
+          echo "<script type='text/javascript'>document.location.href='./gestion_view_heb.php?p=$nbheb'</script>";
         } else //Sinon (la fonction renvoie FALSE).
         {
           echo 'Echec de l\'upload !';

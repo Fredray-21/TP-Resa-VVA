@@ -39,7 +39,7 @@
               <h4 class="text-info">Espace Gestion</h4>
               <ul>
                 <li><i class="bx bx-chevron-right text-info"></i> <a href="gestion_view_resa.php">Voir les réservations</a></li>
-                <li><i class="bx bx-chevron-right text-info"></i> <a href="view_heb_gestion.php">Voir les hebergements</a></li>
+                <li><i class="bx bx-chevron-right text-info"></i> <a href="gestion_view_heb.php">Voir les hebergements</a></li>
                 <li><i class="bx bx-chevron-right text-info"></i> <a href="gestion_add_loc.php">Ajouter un hebergements</a></li>
               </ul>
             </div>

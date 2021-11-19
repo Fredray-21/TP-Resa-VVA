@@ -50,7 +50,7 @@
                     <li><a class="nav-link scrollto" href="index.php">Home</a></li>
                     <li><a class="nav-link scrollto " href="user_engagements.php">Nos Engagements</a></li>
                     <li><a class="nav-link scrollto" href="user_view_heb.php">Nos Hebergements</a></li>
-                    <li><a class="nav-link scrollto active" href="#">Mes Réservations</a></li>
+                    <li><a class="nav-link scrollto " href="user_view_resa">Mes Réservations</a></li>
                     <?php include_once("component_gestion_dropdown.php"); ?>
                     <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
                 </ul>
@@ -344,10 +344,10 @@
                             echo "<td colspan='14' style='color:red'>Vous n'avez aucune réservation ici</td>";
                             if (isset($_GET['p']) && $_GET['p'] > 1) { // si il n'y a pas d'hebermgent sur cette page alors retire 1 page
                                 $p = $_GET['p'] - 1;
-                                echo "<script type='text/javascript'>document.location.href='./view_heb_gestion.php?p=$p'</script>";
+                                echo "<script type='text/javascript'>document.location.href='./gestion_view_heb.php?p=$p'</script>";
                             }
                             if (isset($_GET['p']) && $_GET['p'] == 0) { // si il n'y a pas d'hebermgent sur cette page alors retire 1 page
-                                echo "<script type='text/javascript'>document.location.href='./view_heb_gestion.php'</script>";
+                                echo "<script type='text/javascript'>document.location.href='./gestion_view_heb.php'</script>";
                             }
                         } else {
                             echo "<script type='text/javascript'>document.cookie = 'message= ; expires = Thu, 01 Jan 1970 00:00:00 GMT'</script>";
