@@ -1,5 +1,5 @@
 <?php
-function connectDB()
+function connectDB() //connexion DB
 {
 	$link = new PDO('mysql:host=localhost;dbname=resa_vva', 'resavva', 'resa');
 	$link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -16,6 +16,7 @@ function disconnectDB($link)
 	$link = null;
 }
 
+// FONCTION POUR HEBERGEMENT //
 
 function getAllTypeheb() //Récupération de tout les type d'hébergement
 {
@@ -68,7 +69,7 @@ function getTypehebWherecode($codeTypeHeb) //Récupération du nom du type en fo
 	}
 }
 
-function getLastIDheb()
+function getLastIDheb() // recupération du dernier id inseré dans Heberegments
 {
 	$link = connectDB();
 	if (!$link) {
@@ -116,7 +117,7 @@ function setHebergement($selecttypeheb, $nomheb, $nombreplaceheb, $surfaceheb, $
 }
 
 
-function getNbAllheb()
+function getNbAllheb() // renvoie le nombre d'hebergement
 {
 	$link = connectDB();
 	if (!$link) {
@@ -141,33 +142,7 @@ function getNbAllheb()
 	}
 }
 
-function getNbAllResa()
-{
-	$link = connectDB();
-	if (!$link) {
-		return null;
-	} else {
-		$req = "SELECT count(*) as NbResa FROM resa";
-		$sth = $link->query($req);
-		if (!$sth) {
-			echo $link->errorInfo();
-			return null;
-		} else {
-			$nblignes = $sth->rowCount();
-			if ($nblignes > 0) {
-				$tab = $sth->fetch(PDO::FETCH_ASSOC);
-
-				disconnectDB($link);
-				return $tab;
-			} else {
-				return null;
-			}
-		}
-	}
-}
-
-
-function SetLinkPHOTO($noheb, $adressPHOTO)
+function SetLinkPHOTO($noheb, $adressPHOTO) // ajoute de lien de la photo dans la BDD
 {
 	$link = connectDB();
 	if (!$link) {
@@ -186,7 +161,7 @@ function SetLinkPHOTO($noheb, $adressPHOTO)
 	}
 }
 
-function getAllhebPagination($min, $max)
+function getAllhebPagination($min, $max) //recupère les hebegement en fonction de la pagination
 {
 	$link = connectDB();
 	if (!$link) {
@@ -214,9 +189,7 @@ function getAllhebPagination($min, $max)
 	}
 }
 
-
-
-function getAllheb()
+function getAllheb() // revoie tout les hebergement
 {
 	$link = connectDB();
 	if (!$link) {
@@ -240,7 +213,6 @@ function getAllheb()
 		}
 	}
 }
-
 
 function getHebWhereID($noheb) //Récupération d'un herbergement en fonction de son Numéro
 {
@@ -275,7 +247,7 @@ function UpdateHebergement($selecttypeheb, $nomheb, $nombreplaceheb, $surfaceheb
 		return null;
 	} else {
 		$req = "UPDATE hebergement SET CODETYPEHEB = ?,NOMHEB=?,NBPLACEHEB=?,SURFACEHEB=?,INTERNET=?,ANNEEHEB=?,SECTEURHEB=?,ORIENTATIONHEB=?,ETATHEB=?,DESCRIHEB=?,TARIFSEMHEB=? 
-       WHERE NOHEB = ?";
+		WHERE NOHEB = ?";
 		$sth = $link->prepare($req);
 		$sth->execute([$selecttypeheb, $nomheb, $nombreplaceheb, $surfaceheb, $selectinternet, $anneheb, $secteurheb, $selectorientation, $selectetat, $descriheb, $tarifsem, $noheb]);
 		if (!$sth) {
@@ -313,8 +285,165 @@ function DeleteHebWhereID($noheb)
 	}
 }
 
+//Récupération des hebergement pour une semmaine donné 
+function GetHebergementParSemaine($dateDebSem)
+{
+	$link = connectDB();
+	if (!$link) {
+		return null;
+	} else {
+		$datenow = date("Y-m-d");
+		$req = "SELECT * FROM resa WHERE DATEDEBSEM = ? ORDER BY NORESA ASC";
+		$sth = $link->prepare($req);
+		$sth->execute([$dateDebSem]);
+		if (!$sth) {
+			echo $link->errorInfo();
+			return null;
+		} else {
+			$tab = $sth->fetchAll(PDO::FETCH_ASSOC);
 
+			disconnectDB($link);
+			return $tab;
+		}
+	}
+}
 
+function GetHebFilter($filter)
+{
+	$where = "";
+	$filter = explode(",", $filter);
+
+	foreach ($filter as $key => $value) {
+		$value = explode("=", $value);
+		if (!IsNullOrEmptyString($value[1])) {
+
+			if ($value[0] == "heb" && is_numeric($value[1])) {
+				$where = $where . "CODETYPEHEB = $value[1] and ";
+			} elseif ($value[0] == "wifi" && is_numeric($value[1])) {
+				$where = $where . "INTERNET = $value[1] and ";
+			} elseif ($value[0] == "or" && ($value[1] == "NORD" or $value[1] == "SUD" or $value[1] == "EST" or $value[1] == "OUEST")) {
+				$where = $where . "ORIENTATIONHEB = '$value[1]' and ";
+			} elseif ($value[0] == "surfMin" && is_numeric($value[1])) {
+				$where = $where . "SURFACEHEB >= $value[1] and ";
+			} elseif ($value[0] == "place" && is_numeric($value[1])) {
+				$where = $where . "NBPLACEHEB >= $value[1] and ";
+			} elseif ($value[0] == "dispo" && $value[1] == "Disponible") {
+				$where = $where . "ETATHEB = '$value[1]' and ";
+			} else {
+				return null;
+			}
+		}
+	}
+	$where = substr($where, 0, -4); //supression du "and " final
+	//	echo $where;
+
+	$link = connectDB();
+	if (!$link) {
+		return null;
+	} else {
+		$req = "SELECT * FROM hebergement WHERE $where ORDER BY NOHEB ASC";
+		$sth = $link->query($req);
+		if (!$sth) {
+			echo $link->errorInfo();
+			return null;
+		} else {
+			$nblignes = $sth->rowCount();
+			if ($nblignes > 0) {
+				$tab = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+				disconnectDB($link);
+				return $tab;
+			} else {
+				return null;
+			}
+		}
+	}
+}
+
+//retourne les hebergement en fonction de la page
+function GetResaFilterPagination($filter, $min, $max)
+{
+	$where = "";
+
+	if (isset($filter)) {
+		$filter = explode(",", $filter);
+		foreach ($filter as $key => $value) {
+			$value = explode("=", $value);
+			if (!IsNullOrEmptyString($value[1])) {
+
+				if ($value[0] == "heb" && is_numeric($value[1])) {
+					$where = $where . "NOHEB = $value[1] and ";
+				} elseif ($value[0] == "dateDEB" && !IsNullOrEmptyString($value[1])) {
+					$timestamp = strtotime($value[1]);
+					$value[1] = date("Y-m-d", $timestamp);
+					$where = $where . "DATEDEBSEM = '$value[1]' and ";
+				} else {
+					return null;
+				}
+			}
+		}
+
+		$where = substr($where, 0, -4); //supression du "and " final
+
+		if (empty($where)) {
+			return null;
+		} else {
+			$where = "WHERE " . $where;
+		}
+	}
+	$link = connectDB();
+	if (!$link) {
+		return null;
+	} else {
+		$req = "SELECT * FROM resa $where ORDER BY NORESA DESC LIMIT :min,:max";
+		$sth = $link->prepare($req);
+		$sth->bindValue(':min', $min, PDO::PARAM_INT);
+		$sth->bindValue(':max', $max, PDO::PARAM_INT);
+		$sth->execute();
+		if (!$sth) {
+			echo $link->errorInfo();
+			return null;
+		} else {
+			$nblignes = $sth->rowCount();
+			if ($nblignes > 0) {
+				$tab = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+				disconnectDB($link);
+				return $tab;
+			} else {
+				return null;
+			}
+		}
+	}
+}
+
+// FIN FONCTION HEBERGEMENT
+
+// FONCTION POUR RESERVATION // 
+function getNbAllResa() // retourn le nombre de réservation
+{
+	$link = connectDB();
+	if (!$link) {
+		return null;
+	} else {
+		$req = "SELECT count(*) as NbResa FROM resa";
+		$sth = $link->query($req);
+		if (!$sth) {
+			echo $link->errorInfo();
+			return null;
+		} else {
+			$nblignes = $sth->rowCount();
+			if ($nblignes > 0) {
+				$tab = $sth->fetch(PDO::FETCH_ASSOC);
+
+				disconnectDB($link);
+				return $tab;
+			} else {
+				return null;
+			}
+		}
+	}
+}
 
 //Ajoute une réservation
 function SetRESERVATION($USER, $dateDEBUT, $noheb, $codeEtatResa, $dateRESA, $dateARRHES, $montantARRHES, $nbOCCUP, $tarifSEM)
@@ -333,130 +462,6 @@ function SetRESERVATION($USER, $dateDEBUT, $noheb, $codeEtatResa, $dateRESA, $da
 
 			disconnectDB($link);
 			return true;
-		}
-	}
-}
-
-
-//Calcule d'un pourcentage
-function cacul_pourcentage($nombre, $total, $pourcentage)
-{
-	$resultat = ($nombre / $total) * $pourcentage;
-	return $resultat;
-}
-
-//Récupération de toute les date de la table semaine
-function GetALLDates()
-{
-	$link = connectDB();
-	if (!$link) {
-		return null;
-	} else {
-		$req = "SELECT * from semaine ";
-		$sth = $link->query($req);
-		if (!$sth) {
-			echo $link->errorInfo();
-			return null;
-		} else {
-			$nblignes = $sth->rowCount();
-			if ($nblignes > 0) {
-				$tab = $sth->fetchALL(PDO::FETCH_ASSOC);
-
-				disconnectDB($link);
-				return $tab;
-			} else {
-				return null;
-			}
-		}
-	}
-}
-
-//Récupération des date deja réservé pour un herbergement
-function GetDatesWhereIDHeb($noheb)
-{
-	$link = connectDB();
-	if (!$link) {
-		return null;
-	} else {
-		$req = "SELECT DATEDEBSEM from resa WHERE NOHEB = ? and CODEETATRESA NOT IN (5,6);";
-		$sth = $link->prepare($req);
-		$sth->execute([$noheb]);
-		if (!$sth) {
-			echo $link->errorInfo();
-			return null;
-		} else {
-			$nblignes = $sth->rowCount();
-			if ($nblignes > 0) {
-				$tab = $sth->fetchALL(PDO::FETCH_ASSOC);
-
-				disconnectDB($link);
-				return $tab;
-			} else {
-				return null;
-			}
-		}
-	}
-}
-
-//Retour le tableau de toute les date sans les semaine deja réservé
-function GetDatesACTIF($noheb)
-{
-	$tab = GetDatesWhereIDHeb($noheb); // tableau des date deja réservé pour un hebergement donné
-	$arrayDATEaSUPR = [];
-
-	if (isset($tab)) {
-		foreach ($tab as $key => $value) {
-			array_push($arrayDATEaSUPR, $value['DATEDEBSEM']);
-		}
-	}
-
-	$allDATE = GetALLDates();
-	$arrayALLDATE = [];
-	if (isset($allDATE)) {
-		foreach ($allDATE as $key => $value) {
-			array_push($arrayALLDATE, $value['DATEDEBSEM']);
-		}
-	}
-
-	$dateACTIF = [];
-	$result = array_diff($arrayALLDATE, $arrayDATEaSUPR);
-
-	foreach ($result as $cle => $date) { // on retire les date avant la date du jour
-		if (date("Y-m-d") > $date) {
-			unset($result[$cle]);
-		}
-	}
-
-	foreach ($result as $key => $value) { // on range le tableau en remettant les clé a 0
-		array_push($dateACTIF, $value);
-	}
-	return $dateACTIF;
-}
-
-//Retourne la date de fin pour une date de début donné
-function GetDatesENDWhereDATEdeb($dateDEBUT)
-{
-	$link = connectDB();
-	if (!$link) {
-		return null;
-	} else {
-		$req = "SELECT DATEFINSEM from semaine WHERE DATEDEBSEM = ?";
-		$sth = $link->prepare($req);
-		$sth->execute([$dateDEBUT]);
-		if (!$sth) {
-			echo $link->errorInfo();
-			return null;
-		} else {
-
-			$nblignes = $sth->rowCount();
-			if ($nblignes > 0) {
-				$tab = $sth->fetch(PDO::FETCH_ASSOC);
-
-				disconnectDB($link);
-				return $tab;
-			} else {
-				return null;
-			}
 		}
 	}
 }
@@ -560,7 +565,7 @@ function LastIDinsertRESA()
 	}
 }
 
-//Récupération de l'état d'une réservation
+//Récupération du nom l'état d'une réservation
 function GetNomEtatResa($NORESA)
 {
 	$link = connectDB();
@@ -612,7 +617,6 @@ function AnnuleRESA($NORESA)
 	if (!$link) {
 		return null;
 	} else {
-		$datenow = date("Y-m-d");
 		$req = "UPDATE resa SET CODEETATRESA = 5 WHERE NORESA = ? ";
 		$sth = $link->prepare($req);
 		$sth->execute([$NORESA]);
@@ -623,52 +627,6 @@ function AnnuleRESA($NORESA)
 
 			disconnectDB($link);
 			return True;
-		}
-	}
-}
-
-//Récupération des hebergement pour une semmaine donné 
-function GetHebergementParSemaine($dateDebSem)
-{
-	$link = connectDB();
-	if (!$link) {
-		return null;
-	} else {
-		$datenow = date("Y-m-d");
-		$req = "SELECT * FROM resa WHERE DATEDEBSEM = ? ORDER BY NORESA ASC";
-		$sth = $link->prepare($req);
-		$sth->execute([$dateDebSem]);
-		if (!$sth) {
-			echo $link->errorInfo();
-			return null;
-		} else {
-			$tab = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-			disconnectDB($link);
-			return $tab;
-		}
-	}
-}
-
-//Récupération des nom et prénom pour un user 
-function GetNameWhereUser($USER)
-{
-	$link = connectDB();
-	if (!$link) {
-		return null;
-	} else {
-		$datenow = date("Y-m-d");
-		$req = "SELECT NOMCPTE, PRENOMCPTE FROM compte WHERE USER = ? ";
-		$sth = $link->prepare($req);
-		$sth->execute([$USER]);
-		if (!$sth) {
-			echo $link->errorInfo();
-			return null;
-		} else {
-			$tab = $sth->fetch(PDO::FETCH_ASSOC);
-
-			disconnectDB($link);
-			return $tab;
 		}
 	}
 }
@@ -737,7 +695,38 @@ function UpdateEtatResa($NORESA, $codeEtat)
 		}
 	}
 }
+// FIN FONCTION RESERVATION //
 
+// FONCTION GESTION - UTILE //
+//Calcule d'un pourcentage
+function cacul_pourcentage($nombre, $total, $pourcentage)
+{
+	$resultat = ($nombre / $total) * $pourcentage;
+	return $resultat;
+}
+
+//Récupération des nom et prénom pour un user 
+function GetNameWhereUser($USER)
+{
+	$link = connectDB();
+	if (!$link) {
+		return null;
+	} else {
+		$datenow = date("Y-m-d");
+		$req = "SELECT NOMCPTE, PRENOMCPTE FROM compte WHERE USER = ? ";
+		$sth = $link->prepare($req);
+		$sth->execute([$USER]);
+		if (!$sth) {
+			echo $link->errorInfo();
+			return null;
+		} else {
+			$tab = $sth->fetch(PDO::FETCH_ASSOC);
+
+			disconnectDB($link);
+			return $tab;
+		}
+	}
+}
 
 //ajouter dans un fichier une log de connexion
 function Log_connexion($idUSER, $user)
@@ -750,7 +739,6 @@ function Log_connexion($idUSER, $user)
 	$minute =  $dt->format('i');
 	$seconde =  $dt->format('s');
 
-
 	$d = "[" . $date . " à " . $heure . "H" . $minute . "m" . $seconde . "s] ";
 	$compte = "[User:" . $idUSER . " / Name:" . $user['NOMCPTE'] . " / Firstname:" . $user['PRENOMCPTE'] . "];";
 	$string = $d . utf8_encode($compte);
@@ -762,48 +750,22 @@ function Log_connexion($idUSER, $user)
 	};
 }
 
-
+//retourn si la chaine et null ou que des aspace
 function IsNullOrEmptyString($str)
 {
 	return (!isset($str) || trim($str) === '');
 }
+// FIN FONCTION GESTION - UTILE //
 
-
-function GetHebFilter($filter)
+// FONCTION DATE // 
+//Récupération de toute les date de la table semaine
+function GetALLDates()
 {
-	$where = "";
-
-	$filter = explode(",", $filter);
-
-	foreach ($filter as $key => $value) {
-		$value = explode("=", $value);
-		if (!IsNullOrEmptyString($value[1])) {
-
-			if ($value[0] == "heb" && is_numeric($value[1])) {
-				$where = $where . "CODETYPEHEB = $value[1] and ";
-			} elseif ($value[0] == "wifi" && is_numeric($value[1])) {
-				$where = $where . "INTERNET = $value[1] and ";
-			} elseif ($value[0] == "or" && ($value[1] == "NORD" or $value[1] == "SUD" or $value[1] == "EST" or $value[1] == "OUEST")) {
-				$where = $where . "ORIENTATIONHEB = '$value[1]' and ";
-			} elseif ($value[0] == "surfMin" && is_numeric($value[1])) {
-				$where = $where . "SURFACEHEB >= $value[1] and ";
-			} elseif ($value[0] == "place" && is_numeric($value[1])) {
-				$where = $where . "NBPLACEHEB >= $value[1] and ";
-			} elseif ($value[0] == "dispo" && $value[1] == "Disponible") {
-				$where = $where . "ETATHEB = '$value[1]' and ";
-			} else {
-				return null;
-			}
-		}
-	}
-	$where = substr($where, 0, -4); //supression du "and " final
-	//	echo $where;
-
 	$link = connectDB();
 	if (!$link) {
 		return null;
 	} else {
-		$req = "SELECT * FROM hebergement WHERE $where ORDER BY NOHEB ASC";
+		$req = "SELECT * from semaine ";
 		$sth = $link->query($req);
 		if (!$sth) {
 			echo $link->errorInfo();
@@ -811,7 +773,7 @@ function GetHebFilter($filter)
 		} else {
 			$nblignes = $sth->rowCount();
 			if ($nblignes > 0) {
-				$tab = $sth->fetchAll(PDO::FETCH_ASSOC);
+				$tab = $sth->fetchALL(PDO::FETCH_ASSOC);
 
 				disconnectDB($link);
 				return $tab;
@@ -822,54 +784,23 @@ function GetHebFilter($filter)
 	}
 }
 
-
-function GetResaFilterPagination($filter, $min, $max)
+//Récupération des date deja réservé pour un herbergement
+function GetDatesWhereIDHeb($noheb)
 {
-	$where = "";
-
-	if (isset($filter)) {
-		$filter = explode(",", $filter);
-		foreach ($filter as $key => $value) {
-			$value = explode("=", $value);
-			if (!IsNullOrEmptyString($value[1])) {
-
-				if ($value[0] == "heb" && is_numeric($value[1])) {
-					$where = $where . "NOHEB = $value[1] and ";
-				} elseif ($value[0] == "dateDEB" && !IsNullOrEmptyString($value[1])) {
-					$timestamp = strtotime($value[1]);
-					$value[1] = date("Y-m-d", $timestamp);
-					$where = $where . "DATEDEBSEM = '$value[1]' and ";
-				} else {
-					return null;
-				}
-			}
-		}
-
-		$where = substr($where, 0, -4); //supression du "and " final
-
-
-		if (empty($where)) {
-			return null;
-		} else {
-			$where = "WHERE " . $where;
-		}
-	}
 	$link = connectDB();
 	if (!$link) {
 		return null;
 	} else {
-		$req = "SELECT * FROM resa $where ORDER BY NORESA DESC LIMIT :min,:max";
+		$req = "SELECT DATEDEBSEM from resa WHERE NOHEB = ? and CODEETATRESA NOT IN (5,6);";
 		$sth = $link->prepare($req);
-		$sth->bindValue(':min', $min, PDO::PARAM_INT);
-		$sth->bindValue(':max', $max, PDO::PARAM_INT);
-		$sth->execute();
+		$sth->execute([$noheb]);
 		if (!$sth) {
 			echo $link->errorInfo();
 			return null;
 		} else {
 			$nblignes = $sth->rowCount();
 			if ($nblignes > 0) {
-				$tab = $sth->fetchAll(PDO::FETCH_ASSOC);
+				$tab = $sth->fetchALL(PDO::FETCH_ASSOC);
 
 				disconnectDB($link);
 				return $tab;
@@ -879,3 +810,73 @@ function GetResaFilterPagination($filter, $min, $max)
 		}
 	}
 }
+
+//Retourne le tableau de toute les date sans les semaine deja réservé
+function GetDatesACTIF($noheb)
+{
+	$tab = GetDatesWhereIDHeb($noheb); // tableau des date deja réservé pour un hebergement donné
+	$arrayDATEaSUPR = [];
+
+	if (isset($tab)) {
+		foreach ($tab as $key => $value) {
+			array_push($arrayDATEaSUPR, $value['DATEDEBSEM']);
+		}
+	}
+
+	$allDATE = GetALLDates(); // retourne toute les date de la table semaine
+	$arrayALLDATE = [];
+	if (isset($allDATE)) {
+		foreach ($allDATE as $key => $value) {
+			array_push($arrayALLDATE, $value['DATEDEBSEM']);
+		}
+	}
+
+	$dateACTIF = [];
+	$result = array_diff($arrayALLDATE, $arrayDATEaSUPR);
+
+	foreach ($result as $cle => $date) { // on retire les date avant la date du jour
+		if (date("Y-m-d") > $date) {
+			unset($result[$cle]);
+		}
+	}
+
+	foreach ($result as $key => $value) { // on range le tableau en remettant les clé a 0
+		array_push($dateACTIF, $value);
+	}
+	return $dateACTIF;
+}
+
+//Retourne la date de fin pour une date de début donné
+function GetDatesENDWhereDATEdeb($dateDEBUT)
+{
+	$link = connectDB();
+	if (!$link) {
+		return null;
+	} else {
+		$req = "SELECT DATEFINSEM from semaine WHERE DATEDEBSEM = ?";
+		$sth = $link->prepare($req);
+		$sth->execute([$dateDEBUT]);
+		if (!$sth) {
+			echo $link->errorInfo();
+			return null;
+		} else {
+
+			$nblignes = $sth->rowCount();
+			if ($nblignes > 0) {
+				$tab = $sth->fetch(PDO::FETCH_ASSOC);
+
+				disconnectDB($link);
+				return $tab;
+			} else {
+				return null;
+			}
+		}
+	}
+}
+
+// FIN FONCTION DATE //
+
+
+
+
+

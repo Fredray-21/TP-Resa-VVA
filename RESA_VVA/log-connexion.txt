@@ -90,3 +90,5 @@
 [12/11/2021 à 09H53m12s] [User:gestion / Name:gestion / Firstname:gestion];
 [13/11/2021 à 20H07m16s] [User:admin / Name:admin / Firstname:admin];
 [13/11/2021 à 20H38m01s] [User:fdabadie / Name:Dabadie / Firstname:Frédéric];
+[13/11/2021 à 20H39m28s] [User:admin / Name:admin / Firstname:admin];
+[19/11/2021 à 08H13m34s] [User:admin / Name:admin / Firstname:admin];
