@@ -144,7 +144,6 @@
                             $timestamp = strtotime($dateDEBUT);
                             $dateDEB = date("Y-m-d", $timestamp);
 
-
                             $sth = GetDatesENDWhereDATEdeb($dateDEB);
                             if (!$sth) { // si la date existe pas dans la base (donc est changer dans l'url) alors remet a 0
                                 echo "<script type='text/javascript'>document.location.href='./user_reserve_heb.php?id=$noheb'</script>";
@@ -156,22 +155,45 @@
                         }
                         ?>
                         <!-- Début slide image -->
-                        <div id="carousel<?php echo $ID; ?>" class="carousel slide" data-bs-ride="carousel">
+                        <div id="carousel<?php echo $ID; ?>" class="carousel carousel-dark slide" data-bs-ride="carousel" style="max-width:30em">
                             <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carousel<?php echo $ID; ?>" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                <button type="button" data-bs-target="#carousel<?php echo $ID; ?>" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                <button type="button" data-bs-target="#carousel<?php echo $ID; ?>" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                <?php
+                                $dossierphoto = $hebergement['PHOTOHEB'];
+                                if ($handle = opendir($dossierphoto)) {
+                                    $compteur = 0;
+                                    while (($file = readdir($handle)) !== false) {
+                                        if (!in_array($file, array('.', '..')) && !is_dir($dossierphoto . $file)) {
+                                            if ($compteur == 0) {
+                                                $compteur++;
+                                                echo "<button type='button' data-bs-target='#carousel$ID' data-bs-slide-to='0' class='active' aria-current='true' aria-label='Slide $compteur'></button>";
+                                            } else {
+                                                $compteur++;
+                                                $slide_to = $compteur - 1;
+                                                echo "<button type='button' data-bs-target='#carousel$ID' data-bs-slide-to='$slide_to' aria-label='Slide  $compteur'></button>";
+                                            }
+                                        }
+                                    }
+                                }
+                                ?>
                             </div>
                             <div class="carousel-inner img-thumbnail">
-                                <div class="carousel-item active">
-                                    <img src="assets\img\about.jpg" class="d-block w-100 rounded " alt="..." height="300px">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets\img\cta-bg.jpg" class="d-block w-100 rounded" alt="..." height="300px">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets\img\features.jpg" class="d-block w-100 rounded" alt="..." height="300px">
-                                </div>
+                                <?php
+                                if ($handle = opendir($dossierphoto)) {
+                                    $premier = true;
+                                    while (($file = readdir($handle)) !== false) {
+                                        if (!in_array($file, array('.', '..')) && !is_dir($dossierphoto . $file)) {
+                                            if ($premier) {
+                                                echo "<div class='carousel-item active'>";
+                                                $premier = false;
+                                            } else {
+                                                echo "<div class='carousel-item'>";
+                                            }
+                                            echo "<img src='" . $dossierphoto . $file . "' class='d-block w-100 rounded ' class='img-fluid' height='300px'></div>";
+                                        }
+                                    }
+                                }
+                                ?>
+
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carousel<?php echo $ID; ?>" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -183,6 +205,7 @@
                             </button>
                         </div>
                         <!-- Fin slide image -->
+
 
                         <?php
                         //  echo "Id " . $value['NOHEB'] . "<br>";
