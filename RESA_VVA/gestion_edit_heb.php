@@ -185,7 +185,20 @@
                     <div class="row justify-content-center">
                         <div class="p-3 form-group col-md-4 bg-white">
                             <label for="secteurheb" class="form-label">Secteur de l'hébergement</label>
-                            <input value="<?php echo $hebergement['SECTEURHEB'] ?>" id="secteurheb" name='secteurheb' class="form-control" type="text" maxlength="20" required pattern="[A-Za-z\éèëâäà]{1,20}">
+                            <select class="form-select" aria-label="select" id="secteurheb" name='secteurheb' required>
+                                <?php
+                                $tabSecteur = ['Siège', 'Alpes', 'Pyrénées', 'Est','DTOM','Autres']; // tab et foreach afin de selectionné la bonne orientation
+                                $i = 1;
+                                foreach ($tabSecteur as $key => $Secteur) {
+                                    if ($Secteur == $hebergement['SECTEURHEB']) {
+                                        echo "<option value='$Secteur' selected>$i| $Secteur</option>";
+                                    } else {
+                                        echo "<option value='$Secteur'>$i| $Secteur</option>";
+                                    }
+                                    $i++;
+                                }
+                                ?>
+                            </select>
                         </div>
 
 

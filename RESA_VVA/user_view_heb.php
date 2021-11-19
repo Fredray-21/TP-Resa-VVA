@@ -41,9 +41,7 @@
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top header-inner-pages">
     <div class="container d-flex align-items-center justify-content-lg-between">
-
       <h1 class="logo me-auto me-lg-0"><img src="./assets/img/favicon.png" alt=""> <a href="index.php">RESA<span>.</span></a></h1>
-
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a class="nav-link scrollto" href="index.php">Home</a></li>
@@ -57,7 +55,6 @@
 
       <?php
       include_once("./header/header_with_login.php");
-
       ?>
 
     </div>
@@ -138,7 +135,6 @@
         $getfilter = explode(",", $getfilter);
 
         $filtreActuel = null;
-
         foreach ($getfilter as $key => $value) {
           $value = explode("=", $value);
           if (!IsNullOrEmptyString($value[1])) {
@@ -160,6 +156,8 @@
               $filtreActuel = $filtreActuel . "Nombre de place Minimun=$value[1], ";
             } elseif ($value[0] == "dispo" && $value[1] == "Disponible") {
               $filtreActuel = $filtreActuel . "Disponibilité=$value[1], ";
+            } elseif ($value[0] == "secteur" && ($value[1] == "Siège" or $value[1] == "Alpes" or $value[1] == "Pyrénées" or $value[1] == "Est"or $value[1] == "DTOM"or $value[1] == "Autres")) {
+              $filtreActuel = $filtreActuel . "Secteur=$value[1], ";
             } else {
               $filtreActuel = null;
             }
@@ -187,9 +185,9 @@
             <div class="container ">
               <div class="col m-2">
                 <div>
-                  <input class="form-check-input" name="chkdisponible" value="Disponible" type="checkbox" id="dispo" checked>
+                  <input class="form-check-input" name="chkdisponible" value="Disponible" type="checkbox" id="dispo">
                   <label class="form-check-label" for="dispo">
-                    Que les Disponible
+                    Affiché que les Disponible 
                   </label>
                 </div>
               </div>
@@ -238,6 +236,19 @@
                   ?>
                 </select>
               </div>
+
+              <div class="col m-2">
+              <label for="secteurheb" class="form-label">Secteur de l'hébergement</label>
+              <select class="form-select" aria-label="select" id="secteurheb" name='secteurheb' required>
+                <option value='' disabled selected hidden>Sélectionné un Secteur</option>
+                <option value='Siège'>1| Siège </option>
+                <option value='Alpes'>2| Alpes </option>
+                <option value='Pyrénées'>3| Pyrénées </option>
+                <option value='Est'>4| Est </option>
+                <option value='DTOM'>5| DTOM </option>
+                <option value='Autres'>6| Autres </option>
+              </select>
+            </div>
 
               <div class="col m-3 ">
                 <label for="rangeNBplace">Nombre de place Minimun</label><br>
@@ -487,6 +498,7 @@ foreach ($allheb as $key => $value) {
     orientation = valeur_select("selectorientation");
     surfaceMin = document.getElementById("rangeSurfaceMin").value;
     NbPlace = document.getElementById("rangeNBplace").value;
+    secteur = valeur_select("secteurheb");
 
     if (document.querySelector('input[name="chkdisponible"]:checked') == null) {
       dispo = ""
@@ -494,7 +506,7 @@ foreach ($allheb as $key => $value) {
       dispo = document.querySelector('input[name="chkdisponible"]:checked').value;
     }
 
-    filter = "heb=" + heb + ",wifi=" + radio + ",or=" + orientation + ",surfMin=" + surfaceMin + ",place=" + NbPlace + ",dispo=" + dispo + "";
+    filter = "heb=" + heb + ",wifi=" + radio + ",or=" + orientation + ",surfMin=" + surfaceMin + ",place=" + NbPlace + ",dispo=" + dispo + ",secteur="+secteur+"";
     //alert(filter);
     document.getElementById('filter').value = filter; // met la valeur d'an un input type hidden puis submit le formuaire
   }

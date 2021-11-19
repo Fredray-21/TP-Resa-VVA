@@ -329,6 +329,8 @@ function GetHebFilter($filter)
 				$where = $where . "NBPLACEHEB >= $value[1] and ";
 			} elseif ($value[0] == "dispo" && $value[1] == "Disponible") {
 				$where = $where . "ETATHEB = '$value[1]' and ";
+			} elseif ($value[0] == "secteur" && ($value[1] == "Siège" or $value[1] == "Alpes" or $value[1] == "Pyrénées" or $value[1] == "Est" or $value[1] == "DTOM" or $value[1] == "Autres")) {
+				$where = $where . "SECTEURHEB = '$value[1]' and ";
 			} else {
 				return null;
 			}
@@ -336,7 +338,6 @@ function GetHebFilter($filter)
 	}
 	$where = substr($where, 0, -4); //supression du "and " final
 	//	echo $where;
-
 	$link = connectDB();
 	if (!$link) {
 		return null;
@@ -875,8 +876,3 @@ function GetDatesENDWhereDATEdeb($dateDEBUT)
 }
 
 // FIN FONCTION DATE //
-
-
-
-
-

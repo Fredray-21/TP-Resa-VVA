@@ -139,7 +139,7 @@
 
             <div class="p-3 form-group col-md-3 bg-white">
               <label for="surfaceheb" class="form-label">Surface de l'Hébergement en m²</label>
-              <input id="surfaceheb" name='surfaceheb' class="form-control" type="number" required min="9" maxlength="10"  required pattern="[1-9]">
+              <input id="surfaceheb" name='surfaceheb' class="form-control" type="number" required min="9" maxlength="10" required pattern="[1-9]">
             </div>
 
             <div class="p-3 form-group col-md-3 bg-white">
@@ -162,7 +162,15 @@
           <div class="row justify-content-center">
             <div class="p-3 form-group col-md-4 bg-white">
               <label for="secteurheb" class="form-label">Secteur de l'hébergement</label>
-              <input id="secteurheb" name='secteurheb' class="form-control" type="text" maxlength="20" required pattern="[A-Za-z\éèëâäà]{1,20}">
+              <select class="form-select" aria-label="select" id="secteurheb" name='secteurheb' required>
+                <option value='' disabled selected hidden>Sélectionné un Secteur</option>
+                <option value='Siège'>1| Siège </option>
+                <option value='Alpes'>2| Alpes </option>
+                <option value='Pyrénées'>3| Pyrénées </option>
+                <option value='Est'>4| Est </option>
+                <option value='DTOM'>5| DTOM </option>
+                <option value='Autres'>6| Autres </option>
+              </select>
             </div>
 
             <div class="p-3 form-group col-md-4 bg-white">
