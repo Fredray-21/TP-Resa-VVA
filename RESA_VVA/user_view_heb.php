@@ -116,10 +116,10 @@
       <div class="container">
 
         <div class="d-flex justify-content-between align-items-center">
-          <h2>Voir Nos Hebergementss</h2>
+          <h2>Voir Nos Hebergements</h2>
           <ol>
             <li><a href="index.php">Home</a></li>
-            <li>Voir Nos Hebergementss</li>
+            <li>Voir Nos Hebergements</li>
           </ol>
         </div>
       </div>
