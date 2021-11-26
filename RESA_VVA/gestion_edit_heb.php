@@ -39,10 +39,7 @@
     } else {
         header('Location: user_view_heb.php');
     }
-
     ?>
-
-
 
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top header-inner-pages">
@@ -187,7 +184,7 @@
                             <label for="secteurheb" class="form-label">Secteur de l'hébergement</label>
                             <select class="form-select" aria-label="select" id="secteurheb" name='secteurheb' required>
                                 <?php
-                                $tabSecteur = ['Siège', 'Alpes', 'Pyrénées', 'Est','DTOM','Autres']; // tab et foreach afin de selectionné la bonne orientation
+                                $tabSecteur = ['Siège', 'Alpes', 'Pyrénées', 'Est', 'DTOM', 'Autres']; // tab et foreach afin de selectionné la bonne orientation
                                 $i = 1;
                                 foreach ($tabSecteur as $key => $Secteur) {
                                     if ($Secteur == $hebergement['SECTEURHEB']) {
@@ -420,15 +417,17 @@
 
                 $value = "La photo a bien été ajouté a l'hébergement";
                 echo "<script type='text/javascript'>document.cookie =\"message=$value\";</script>";
-
-
                 $redirection = "gestion_edit_heb.php?id=" . $_GET['id'] . "&p=" . $_GET['p'] . "";
-
                 echo "<script type='text/javascript'>document.location.href='./" . $redirection . "'</script>";
             } else //Sinon (la fonction renvoie FALSE).
             {
                 echo 'Echec de l\'upload !';
             }
+        }else{
+            echo "<script type='text/javascript'>document.cookie =\"message=$erreur\";</script>";
+            $redirection = "gestion_edit_heb.php?id=" . $_GET['id'] . "&p=" . $_GET['p'] . "&e=1";
+            echo "<script type='text/javascript'>document.location.href='./" . $redirection . "'</script>";
+
         }
     }
 

@@ -52,7 +52,11 @@
 
       <?php
       include_once("./header/header_without_login.php");
-
+      if (isset($_SESSION['post'])) {
+        $ancienneVal = $_SESSION['post'];
+      } else {
+        $ancienneVal = null;
+      }
       ?>
 
     </div>
@@ -105,6 +109,7 @@
     </section>
     <!-- End Breadcrumbs -->
 
+
     <section class="inner-page" data-aos="fade-up">
       <div class="container ">
         <form action="" method="post" enctype="multipart/form-data">
@@ -119,7 +124,15 @@
                 foreach ($allTypeheb as $key => $value) {
                   $nomheb = $value['NOMTYPEHEB'];
                   $numheb = $value['CODETYPEHEB'];
-                  echo "<option value='$numheb'>$nomheb</option>";
+                  if (isset($ancienneVal['selecttypeheb'])) {
+                    if ($numheb == $ancienneVal['selecttypeheb']) {
+                      echo "<option value='$numheb' selected>$nomheb</option>";
+                    } else {
+                      echo "<option value='$numheb'>$nomheb</option>";
+                    }
+                  } else {
+                    echo "<option value='$numheb'>$nomheb</option>";
+                  }
                 }
                 ?>
               </select>
@@ -127,19 +140,19 @@
 
             <div class="p-3 form-group col-md-4 bg-white">
               <label for="nomheb" class="form-label">Nom Hébergement</label>
-              <input class="form-control" type="text" id="nomheb" name='nomheb' required maxlength="40" pattern="^[A-Za-z]{1}[A-Za-z1-9 ]{1,30}">
+              <input class="form-control" value="<?php if (isset($ancienneVal['nomheb'])) echo $ancienneVal['nomheb'];  ?>" type="text" id="nomheb" name='nomheb' required maxlength="40" pattern="^[A-Za-z]{1}[A-Za-z1-9 ]{1,30}">
             </div>
           </div>
 
           <div class="row justify-content-center ">
             <div class="p-3 form-group col-md-2 bg-white">
               <label for="nombreplaceheb" class="form-label">Nombre de place</label>
-              <input id="nombreplaceheb" name='nombreplaceheb' class="form-control" type="number" min="1" max="99" step="1" oninput="validity.valid||(value='');" required pattern="[1-9]">
+              <input id="nombreplaceheb" value="<?php if (isset($ancienneVal['nombreplaceheb'])) echo $ancienneVal['nombreplaceheb']; ?>" name='nombreplaceheb' class="form-control" type="number" min="1" max="99" step="1" oninput="validity.valid||(value='');" required pattern="[1-9]">
             </div>
 
             <div class="p-3 form-group col-md-3 bg-white">
               <label for="surfaceheb" class="form-label">Surface de l'Hébergement en m²</label>
-              <input id="surfaceheb" name='surfaceheb' class="form-control" type="number" required min="9" maxlength="10" required pattern="[1-9]">
+              <input id="surfaceheb" name='surfaceheb' value="<?php if (isset($ancienneVal['surfaceheb'])) echo $ancienneVal['surfaceheb']; ?>" class="form-control" type="number" required min="9" maxlength="10" required pattern="[1-9]">
             </div>
 
             <div class="p-3 form-group col-md-3 bg-white">
@@ -151,7 +164,15 @@
                 $d = date("Y");
                 for ($i = 0; $i <= 30; $i++) {
                   $date = $d - $i;
-                  echo " <option value='$date'>$date</option>";
+                  if (isset($ancienneVal['anneheb'])) {
+                    if ($ancienneVal['anneheb'] == $date) {
+                      echo " <option value='$date' selected>$date</option>";
+                    } else {
+                      echo " <option value='$date'>$date</option>";
+                    }
+                  } else {
+                    echo " <option value='$date'>$date</option>";
+                  }
                 }
                 ?>
               </select>
@@ -159,28 +180,39 @@
             </div>
           </div>
 
-          <div class="row justify-content-center" >
+          <div class="row justify-content-center">
             <div class="p-3 form-group col-md-4 bg-white">
               <label for="secteurheb" class="form-label">Secteur de l'hébergement</label>
               <select class="form-select" aria-label="select" id="secteurheb" name='secteurheb' required>
                 <option value='' disabled selected hidden>Sélectionné un Secteur</option>
-                <option value='Siège'>1| Siège </option>
-                <option value='Alpes'>2| Alpes </option>
-                <option value='Pyrénées'>3| Pyrénées </option>
-                <option value='Est'>4| Est </option>
-                <option value='DTOM'>5| DTOM </option>
-                <option value='Autres'>6| Autres </option>
+
+                <?php
+                $tabSecteur = ["Siège", "Alpes", "Pyrénées", "Est", "DTOM", "Autres"];
+                $counter = 0;
+                foreach ($tabSecteur as $key => $Secteur) {
+                  $counter++;
+                  if (isset($ancienneVal['secteurheb'])) {
+                    if ($Secteur == $ancienneVal['secteurheb']) {
+                      echo "<option value='$Secteur' selected>$counter | $Secteur</option>";
+                    } else {
+                      echo "<option value='$Secteur'>$counter | $Secteur</option>";
+                    }
+                  } else {
+                    echo "<option value='$Secteur'>$counter | $Secteur</option>";
+                  }
+                }
+                ?>
               </select>
             </div>
 
             <div class="p-3 form-group col-md-4 bg-white">
               <label for='selectinternet' class="form-label">Présence d'internet?</label><br>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="btnRadio" id="inlineRadio1" value="1" required>
+                <input class="form-check-input" type="radio" name="btnRadio" id="inlineRadio1" value="1" required <?php if (isset($ancienneVal['btnRadio']) && $ancienneVal['btnRadio'] == 1) echo "checked" ?>>
                 <label class="form-check-label" for="inlineRadio1">OUI</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="btnRadio" id="inlineRadio2" value="0">
+                <input class="form-check-input" type="radio" name="btnRadio" id="inlineRadio2" value="0" <?php if (isset($ancienneVal['btnRadio']) && $ancienneVal['btnRadio'] == 0) echo "checked" ?>>
                 <label class="form-check-label" for="inlineRadio2">NON</label>
               </div>
 
@@ -192,10 +224,21 @@
               <label for='selectorientation' class="form-label">Orientation de l'Hébergement</label>
               <select class="form-select" aria-label="select" id="selectorientation" name='selectorientation' required>
                 <option value='' disabled selected hidden>Sélectionné une orientation</option>
-                <option value='NORD'>NORD</option>
-                <option value='SUD'>SUD</option>
-                <option value='EST'>EST</option>
-                <option value='OUEST'>OUEST</option>
+
+                <?php
+                $tabOrientation = ["NORD", "SUD", "EST", "OUEST"];
+                foreach ($tabOrientation as $key => $Orientation) {
+                  if (isset($ancienneVal['selectorientation'])) {
+                    if ($Orientation == $ancienneVal['selectorientation']) {
+                      echo "<option value='$Orientation' selected>$Orientation</option>";
+                    } else {
+                      echo "<option value='$Orientation'>$Orientation</option>";
+                    }
+                  } else {
+                    echo "<option value='$Orientation'>$Orientation</option>";
+                  }
+                }
+                ?>
               </select>
             </div>
 
@@ -203,22 +246,34 @@
               <label for='selectetat' class="form-label">Etat de l'Hébergement</label>
               <select class="form-select" aria-label="select" id="selectetat" name='selectetat' required>
                 <option value='' disabled selected hidden>Sélectionné un etat</option>
-                <option value='Disponible'>Disponible</option>
-                <option value='En-rénovation'>En Rénovation</option>
+                <?php
+                $tabEtat = ["Disponible", "En-rénovation"];
+                foreach ($tabEtat as $key => $Etat) {
+                  if (isset($ancienneVal['selectetat'])) {
+                    if ($Etat == $ancienneVal['selectetat']) {
+                      echo "<option value='$Etat' selected>$Etat</option>";
+                    } else {
+                      echo "<option value='$Etat'>$Etat</option>";
+                    }
+                  } else {
+                    echo "<option value='$Etat'>$Etat</option>";
+                  }
+                }
+                ?>
               </select>
             </div>
           </div>
           <div class="row justify-content-center">
             <div class="p-3 form-group col-lg-8 bg-white">
               <label for="descriheb" class="form-label">Description de l'hébergement</label>
-              <textarea id="descriheb" class="form-control" name='descriheb' aria-label="With textarea" rows="3" maxlength="190" required pattern="[a-z\s\éèëâäà]{1,189}" }></textarea>
+              <textarea id="descriheb" class="form-control" name='descriheb' aria-label="With textarea" rows="3" maxlength="190" required pattern="[a-z\s\éèëâäà]{1,189}" ><?php if(isset($ancienneVal['descriheb'])) echo $ancienneVal['descriheb'] ?></textarea>
             </div>
 
           </div>
           <div class="row justify-content-center">
             <div class="p-3 form-group col-md-3 bg-white">
               <label for="tarifsem" class="form-label">Tarif par semaine de l'hébergement</label>
-              <input id="tarifsem" name='tarifsem' class="form-control" type="number" step=".01" min="1" maxlength="10" required pattern="^\d*(\.\d{0,2})?$">
+              <input id="tarifsem" name='tarifsem' class="form-control" type="number" step=".01" min="1" maxlength="10" required pattern="^\d*(\.\d{0,2})?$" value="<?php if(isset($ancienneVal['tarifsem'])) echo $ancienneVal['tarifsem']?>">
             </div>
 
             <div class="p-3 form-group col-md-3 bg-white">
@@ -235,10 +290,10 @@
         </form>
       </div>
     </section>
-
   </main><!-- End #main -->
 
   <?php //W.I.P gestion photo
+  if(isset($_SESSION['post'])) unset($_SESSION['post']);
   if (isset($_POST['btnaddheb'])) {
     if (isset($_POST['selecttypeheb']) && isset($_POST['nomheb']) && isset($_POST['btnRadio']) && isset($_POST['nombreplaceheb']) && isset($_POST['anneheb']) && isset($_POST['secteurheb']) && isset($_POST['selectorientation']) && isset($_POST['selectetat']) && isset($_POST['descriheb']) && isset($_POST['descriheb']) && isset($_POST['tarifsem']) && isset($_FILES['imageHeb'])) {
 
@@ -318,17 +373,19 @@
           echo "<script type='text/javascript'>document.location.href='./gestion_view_heb.php?p=$nbheb'</script>";
         } else //Sinon (la fonction renvoie FALSE).
         {
-          echo 'Echec de l\'upload !';
+          $erreur = "Echec de l\'upload";
+          $_SESSION['post'] = $_POST;
+          echo "<script type='text/javascript'>document.cookie =\"message=$erreur\";</script>";
+          echo "<script type='text/javascript'>document.location.href='./gestion_add_loc.php?e=1'</script>";
         }
       } else {
+        $_SESSION['post'] = $_POST;
+
         echo "<script type='text/javascript'>document.cookie =\"message=$erreur\";</script>";
         echo "<script type='text/javascript'>document.location.href='./gestion_add_loc.php?e=1'</script>";
       }
     }
   } // FIN W.I.P gestion photo
-
-
-
 
   include_once("component_footer.php");
   include_once("component_message.php")
