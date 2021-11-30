@@ -30,6 +30,11 @@
   <link href="assets/css/style.css" rel="stylesheet">
 
 </head>
+<?php
+if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
+  echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
+}
+?>
 
 <body id="page">
 
@@ -62,11 +67,7 @@
     </div>
   </header><!-- End Header -->
 
-  <?php
-  if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
-    echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
-  }
-  ?>
+
 
   <!-- modal disconnect-->
   <div class="modal fade" id="modalout">
@@ -266,14 +267,14 @@
           <div class="row justify-content-center">
             <div class="p-3 form-group col-lg-8 bg-white">
               <label for="descriheb" class="form-label">Description de l'hébergement</label>
-              <textarea id="descriheb" class="form-control" name='descriheb' aria-label="With textarea" rows="3" maxlength="190" required pattern="[a-z\s\éèëâäà]{1,189}" ><?php if(isset($ancienneVal['descriheb'])) echo $ancienneVal['descriheb'] ?></textarea>
+              <textarea id="descriheb" class="form-control" name='descriheb' aria-label="With textarea" rows="3" maxlength="190" required pattern="[a-z\s\éèëâäà]{1,189}"><?php if (isset($ancienneVal['descriheb'])) echo $ancienneVal['descriheb'] ?></textarea>
             </div>
 
           </div>
           <div class="row justify-content-center">
             <div class="p-3 form-group col-md-3 bg-white">
               <label for="tarifsem" class="form-label">Tarif par semaine de l'hébergement</label>
-              <input id="tarifsem" name='tarifsem' class="form-control" type="number" step=".01" min="1" maxlength="10" required pattern="^\d*(\.\d{0,2})?$" value="<?php if(isset($ancienneVal['tarifsem'])) echo $ancienneVal['tarifsem']?>">
+              <input id="tarifsem" name='tarifsem' class="form-control" type="number" step=".01" min="1" maxlength="10" required pattern="^\d*(\.\d{0,2})?$" value="<?php if (isset($ancienneVal['tarifsem'])) echo $ancienneVal['tarifsem'] ?>">
             </div>
 
             <div class="p-3 form-group col-md-3 bg-white">
@@ -293,7 +294,7 @@
   </main><!-- End #main -->
 
   <?php //W.I.P gestion photo
-  if(isset($_SESSION['post'])) unset($_SESSION['post']);
+  if (isset($_SESSION['post'])) unset($_SESSION['post']);
   if (isset($_POST['btnaddheb'])) {
     if (isset($_POST['selecttypeheb']) && isset($_POST['nomheb']) && isset($_POST['btnRadio']) && isset($_POST['nombreplaceheb']) && isset($_POST['anneheb']) && isset($_POST['secteurheb']) && isset($_POST['selectorientation']) && isset($_POST['selectetat']) && isset($_POST['descriheb']) && isset($_POST['descriheb']) && isset($_POST['tarifsem']) && isset($_FILES['imageHeb'])) {
 
