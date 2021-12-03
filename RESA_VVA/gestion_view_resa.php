@@ -439,7 +439,7 @@
                                     $codeEtat = $_POST['EtatResa'];
                                     $sthh = UpdateEtatResa($NORESA, $codeEtat);
                                     if ($sthh) {
-                                        $value = "L'état de  l'hebergement N°$NOHEB a bien été Modifier";
+                                        $value = "L'état de  la Réservation N°$NORESA a bien été Modifier";
                                         echo "<script type='text/javascript'>document.cookie =\"message=$value\";</script>";
                                         $redirection = explode("/", $_SERVER['REQUEST_URI']); // afin de rester sur la page actuel
                                         echo "<script type='text/javascript'>document.location.href='./" . end($redirection) . "'</script>";
