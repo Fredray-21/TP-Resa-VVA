@@ -372,6 +372,8 @@ session_start();
                 echo "<button onclick='this.form.submit(); document.cookie =\"message=$message \";' class='btn btn-warning' name='e' value='1'  title='Réservé'>Réserver</button><br>";
                 echo "</form>";
               }
+            }else{
+              echo "<button class='btn btn-danger'>Indisponible</button><br>";
             }
 
 
