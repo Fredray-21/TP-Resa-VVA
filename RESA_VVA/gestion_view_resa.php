@@ -38,7 +38,12 @@
 </head>
 
 <body id="page">
-
+    <?php
+    session_start();
+    if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
+        echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
+    }
+    ?>
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top header-inner-pages">
         <div class="container d-flex align-items-center justify-content-lg-between">
@@ -63,10 +68,6 @@
         </div>
     </header><!-- End Header -->
     <?php
-    if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
-        echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
-    }
-
     $parPage = 5;
     if (isset($_GET['p']) && $_GET['p'] != null) {
         $pageCourante = $_GET['p'];

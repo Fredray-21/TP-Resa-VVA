@@ -1,4 +1,4 @@
-<?php session_start();
+<?php 
 if (isset($_SESSION['type'])) {
   if ($_SESSION['type'] == "ADM" || $_SESSION['type'] == "LOC") { ?>
     <li class="dropdown"><a href="#"><span style="color:cyan">Espace Gestion</span> <i class="bi bi-chevron-down"></i></a>

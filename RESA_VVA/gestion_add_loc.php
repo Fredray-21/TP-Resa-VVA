@@ -30,13 +30,14 @@
   <link href="assets/css/style.css" rel="stylesheet">
 
 </head>
-<?php
-if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
-  echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
-}
-?>
 
 <body id="page">
+  <?php
+  session_start();
+  if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
+    echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
+  }
+  ?>
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top header-inner-pages">
@@ -63,10 +64,8 @@ if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou
         $ancienneVal = null;
       }
       ?>
-
     </div>
   </header><!-- End Header -->
-
 
 
   <!-- modal disconnect-->

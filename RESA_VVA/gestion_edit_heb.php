@@ -39,6 +39,11 @@
     } else {
         header('Location: user_view_heb.php');
     }
+
+    session_start();
+    if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
+        echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
+    }
     ?>
 
     <!-- ======= Header ======= -->
@@ -66,12 +71,6 @@
 
         </div>
     </header><!-- End Header -->
-
-    <?php
-    if (empty($_SESSION['type']) || $_SESSION['type'] == "VAC") { // si pas login ou pas admin/gestionnaire alors retour index
-        echo "<script type='text/javascript'>document.location.href='./index.php'</script>";
-    }
-    ?>
     <!-- modal disconnect-->
     <div class="modal fade" id="modalout">
         <div class="modal-dialog">
@@ -423,11 +422,10 @@
             {
                 echo 'Echec de l\'upload !';
             }
-        }else{
+        } else {
             echo "<script type='text/javascript'>document.cookie =\"message=$erreur\";</script>";
             $redirection = "gestion_edit_heb.php?id=" . $_GET['id'] . "&p=" . $_GET['p'] . "&e=1";
             echo "<script type='text/javascript'>document.location.href='./" . $redirection . "'</script>";
-
         }
     }
 
