@@ -214,6 +214,29 @@ function getAllheb() // revoie tout les hebergement
 	}
 }
 
+function getMaxSurffaceHeb() // revoie tout les hebergement
+{
+	$link = connectDB();
+	if (!$link) {
+		return null;
+	} else {
+		$req = "SELECT MAX(SURFACEHEB) as MaxSurface from hebergement";
+		$sth = $link->query($req);
+		if (!$sth) {
+			echo $link->errorInfo();
+			return null;
+		} else {
+			$tab = $sth->fetch(PDO::FETCH_ASSOC);
+			if ($tab) {
+				disconnectDB($link);
+				return $tab;
+			} else {
+				return null;
+			}
+		}
+	}
+}
+
 function getHebWhereID($noheb) //Récupération d'un herbergement en fonction de son Numéro
 {
 	$link = connectDB();

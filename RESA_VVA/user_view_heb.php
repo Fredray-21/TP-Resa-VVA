@@ -260,7 +260,7 @@ session_start();
 
               <div class="col m-3 ">
                 <label for="rangeSurfaceMin">Surface Minimun</label><br>
-                <input id="rangeSurfaceMin" type="range" value="9" min="9" max="200" oninput="this.nextElementSibling.value = this.value">
+                <input id="rangeSurfaceMin" type="range" value="9" min="9" max="<?php echo getMaxSurffaceHeb()['MaxSurface']?>" oninput="this.nextElementSibling.value = this.value">
                 <output>9</output>m²
               </div>
 
