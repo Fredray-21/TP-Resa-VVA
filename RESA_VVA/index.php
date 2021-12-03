@@ -47,6 +47,7 @@
       </nav><!-- .navbar -->
 
       <?php
+      session_start();
       include_once("./header/header_with_login.php");
       ?>
     </div>
@@ -119,6 +120,7 @@
   <?php
   include_once("component_footer.php");
   include_once("component_message.php");
+
   ?>
 
 </body>

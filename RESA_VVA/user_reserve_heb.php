@@ -35,7 +35,13 @@
 </head>
 
 <body id="page">
-
+    <?php
+    session_start();
+    //verification des droit
+    if (empty($_SESSION['type'])) { // si pas login alors retour index
+        header('location: ./index.php');
+    }
+    ?>
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top header-inner-pages">
         <div class="container d-flex align-items-center justify-content-lg-between">
@@ -60,12 +66,7 @@
 
         </div>
     </header><!-- End Header -->
-    <?php
-    //verification des droit
-    if (empty($_SESSION['type'])) { // si pas login alors retour index
-        header('location: ./index.php');
-    }
-    ?>
+
 
     <!-- modal disconnect-->
     <div class="modal fade" id="modalout">

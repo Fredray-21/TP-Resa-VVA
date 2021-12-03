@@ -53,6 +53,7 @@
 
 
       <?php
+      session_start();
       include_once("./header/header_with_login.php");
       ?>
     </div>
