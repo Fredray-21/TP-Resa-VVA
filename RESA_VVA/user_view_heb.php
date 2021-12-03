@@ -254,7 +254,7 @@ session_start();
 
               <div class="col m-3 ">
                 <label for="rangeNBplace">Nombre de place Minimun</label><br>
-                <input id="rangeNBplace" type="range" value="1" min="1" max="20" oninput="this.nextElementSibling.value = this.value">
+                <input id="rangeNBplace" type="range" value="1" min="1" max="<?php echo getMaxPlaceHeb()['MaxPlace'] ?>" oninput="this.nextElementSibling.value = this.value">
                 <output>1</output> <i class='fas fa-user'></i>
               </div>
 
