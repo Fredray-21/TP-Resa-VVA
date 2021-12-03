@@ -37,7 +37,9 @@
 </head>
 
 <body id="page">
-
+<?php
+session_start();
+?>
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top header-inner-pages">
     <div class="container d-flex align-items-center justify-content-lg-between">
@@ -54,7 +56,6 @@
       </nav><!-- .navbar -->
 
       <?php
-      session_start();
       include_once("./header/header_with_login.php");
       ?>
 

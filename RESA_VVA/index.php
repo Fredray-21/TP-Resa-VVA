@@ -30,6 +30,9 @@
 </head>
 
 <body>
+  <?php
+  session_start();
+  ?>
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center justify-content-lg-between">
@@ -47,7 +50,6 @@
       </nav><!-- .navbar -->
 
       <?php
-      session_start();
       include_once("./header/header_with_login.php");
       ?>
     </div>
