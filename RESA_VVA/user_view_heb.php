@@ -373,7 +373,7 @@ session_start();
                 echo "</form>";
               }
             }else{
-              echo "<button class='btn btn-danger'>Indisponible</button><br>";
+              echo "<span class='btn btn-danger'>Indisponible</span><br>";
             }
 
 
